@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Kivi — professional Indic-script dictation for district courts and language departments. 20 wpm typing → 100+ wpm speaking." />
+  <title>Kivi — Professional Indic Dictation</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+<!-- ═══════════════════ ONBOARDING OVERLAY ═══════════════════ -->
+<div class="onboarding-overlay" id="onboarding">
+  <div class="onboarding-progress"><div class="onboarding-progress-bar" id="onboarding-progress" style="width: 0%"></div></div>
+  <button class="onboarding-skip" onclick="Onboarding.skip()">skip setup →</button>
+
+  <!-- ── Step 0: Welcome ─────────────────────────────────────── -->
+  <div class="onboarding-step active" id="onboard-welcome" data-step="0">
+    <!-- Institutional document/seal motif -->
+    <div class="hero-motif">
+      <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer seal circle -->
+        <circle cx="80" cy="80" r="72" stroke="currentColor" stroke-width="1.2" opacity="0.25"/>
+        <circle cx="80" cy="80" r="66" stroke="currentColor" stroke-width="0.5" opacity="0.12" stroke-dasharray="2 4"/>
+        <!-- Document/register page -->
+        <rect x="50" y="36" width="60" height="82" rx="2" stroke="currentColor" stroke-width="1.2" opacity="0.5"/>
+        <!-- Ruled lines inside the page -->
+        <line x1="58" y1="50" x2="102" y2="50" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+        <line x1="58" y1="60" x2="102" y2="60" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+        <line x1="58" y1="70" x2="102" y2="70" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+        <line x1="58" y1="80" x2="102" y2="80" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+        <line x1="58" y1="90" x2="102" y2="90" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+        <line x1="58" y1="100" x2="102" y2="100" stroke="currentColor" stroke-width="0.6" opacity="0.2"/>
+        <!-- Seal / stamp mark -->
+        <circle cx="92" cy="102" r="12" stroke="currentColor" stroke-width="1" opacity="0.35"/>
+        <circle cx="92" cy="102" r="8" stroke="currentColor" stroke-width="0.5" opacity="0.18"/>
+      </svg>
+    </div>
+
+    <div class="stat-hero">
+      <div class="stat-hero-number">20 wpm → 100+</div>
+      <div class="stat-hero-unit">words per minute</div>
+    </div>
+
+    <h1 class="onboarding-title">stop typing Devanagari on a QWERTY keyboard.</h1>
+    <p class="onboarding-subtitle">
+      Kivi turns speech into formatted Indic-script documents — more accurate on Indian languages than Gemini or GPT-4o. Built for district courts and language departments.
+    </p>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-primary btn-lg" onclick="Onboarding.next()">
+        <span>set up kivi</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 1: Language ────────────────────────────────────── -->
+  <div class="onboarding-step" id="onboard-language" data-step="1">
+    <div class="onboarding-step-number">step 1 of 7</div>
+    <h2 class="onboarding-title">which language do you work in?</h2>
+    <p class="onboarding-subtitle">
+      Kivi transcribes speech directly into the script your documents require.
+    </p>
+
+    <div class="language-grid stagger" id="language-picker">
+      <button class="language-chip" data-lang="marathi" onclick="Onboarding.selectLanguage(this)">
+        Marathi <span class="language-chip-native">मराठी</span>
+      </button>
+      <button class="language-chip" data-lang="hindi" onclick="Onboarding.selectLanguage(this)">
+        Hindi <span class="language-chip-native">हिन्दी</span>
+      </button>
+      <button class="language-chip" data-lang="tamil" onclick="Onboarding.selectLanguage(this)">
+        Tamil <span class="language-chip-native">தமிழ்</span>
+      </button>
+      <button class="language-chip" data-lang="telugu" onclick="Onboarding.selectLanguage(this)">
+        Telugu <span class="language-chip-native">తెలుగు</span>
+      </button>
+      <button class="language-chip" data-lang="kannada" onclick="Onboarding.selectLanguage(this)">
+        Kannada <span class="language-chip-native">ಕನ್ನಡ</span>
+      </button>
+      <button class="language-chip" data-lang="gujarati" onclick="Onboarding.selectLanguage(this)">
+        Gujarati <span class="language-chip-native">ગુજરાતી</span>
+      </button>
+      <button class="language-chip" data-lang="bengali" onclick="Onboarding.selectLanguage(this)">
+        Bengali <span class="language-chip-native">বাংলা</span>
+      </button>
+      <button class="language-chip" data-lang="malayalam" onclick="Onboarding.selectLanguage(this)">
+        Malayalam <span class="language-chip-native">മലയാളം</span>
+      </button>
+    </div>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" onclick="Onboarding.prev()">← back</button>
+      <button class="btn btn-primary btn-lg" id="lang-next-btn" onclick="Onboarding.next()" disabled>
+        <span>continue</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 2: Profession ──────────────────────────────────── -->
+  <div class="onboarding-step" id="onboard-profession" data-step="2">
+    <div class="onboarding-step-number">step 2 of 7</div>
+    <h2 class="onboarding-title">where do you file documents?</h2>
+    <p class="onboarding-subtitle">
+      typing official documents in Devanagari on a QWERTY layout is the bottleneck. tell us your workspace so we configure the right templates and terminology.
+    </p>
+
+    <!-- Primary personas — Court and Teacher -->
+    <div class="profession-primary stagger" id="profession-picker">
+      <button class="profession-card profession-card-primary" data-profession="court" onclick="Onboarding.selectProfession(this)">
+        <div class="profession-card-icon">⚖️</div>
+        <div class="profession-card-title">District Court Staff</div>
+        <div class="profession-card-desc">petitions, orders, affidavits, case summaries — all in Devanagari</div>
+      </button>
+      <button class="profession-card profession-card-primary" data-profession="teacher" onclick="Onboarding.selectProfession(this)">
+        <div class="profession-card-icon">📚</div>
+        <div class="profession-card-title">Language Teacher</div>
+        <div class="profession-card-desc">question papers, lesson plans, evaluations — typed in the script you teach</div>
+      </button>
+    </div>
+    <!-- Secondary fallback -->
+    <div class="profession-secondary-label">also works for</div>
+    <div class="profession-secondary">
+      <button class="profession-chip" data-profession="government" onclick="Onboarding.selectProfession(this)">🏛️ government office</button>
+      <button class="profession-chip" data-profession="other" onclick="Onboarding.selectProfession(this)">💼 other workplace</button>
+    </div>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" onclick="Onboarding.prev()">← back</button>
+      <button class="btn btn-primary btn-lg" id="prof-next-btn" onclick="Onboarding.next()" disabled>
+        <span>continue</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 3: Personalization Payoff ──────────────────────── -->
+  <div class="onboarding-step" id="onboard-payoff" data-step="3">
+    <div class="onboarding-step-number">step 3 of 7</div>
+    <h2 class="onboarding-title">your workspace is configured.</h2>
+    <p class="onboarding-subtitle">
+      registers, dictionary, and accuracy — ready for your first dictation.
+    </p>
+
+    <div class="payoff-grid" id="payoff-content">
+      <!-- Populated by JS: registers, dictionary, accuracy stat -->
+    </div>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" onclick="Onboarding.prev()">← back</button>
+      <button class="btn btn-primary btn-lg" onclick="Onboarding.next()">
+        <span>try dictating</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 4: Try Dictation ───────────────────────────────── -->
+  <div class="onboarding-step" id="onboard-dictation" data-step="4">
+    <div class="onboarding-step-number">step 4 of 7</div>
+    <h2 class="onboarding-title">try your first dictation.</h2>
+    <p class="onboarding-subtitle">
+      type below to simulate — in production, you speak. content flows into your register template.
+    </p>
+
+    <div class="onboard-dictation-demo">
+      <div class="onboard-dictation-prompt" id="dictation-prompt"></div>
+      <div class="dictation-area">
+        <textarea
+          class="dictation-textarea"
+          id="onboard-dictation-input"
+          placeholder="start typing to simulate dictation..."
+          oninput="Onboarding.onDictation(this.value)"
+        ></textarea>
+      </div>
+      <div class="template-preview mt-6" id="onboard-template-preview">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" onclick="Onboarding.prev()">← back</button>
+      <button class="btn btn-primary btn-lg" onclick="Onboarding.next()">
+        <span>continue</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 5: Confidence Marking ──────────────────────────── -->
+  <div class="onboarding-step" id="onboard-confidence" data-step="5">
+    <div class="onboarding-step-number">step 5 of 7</div>
+    <h2 class="onboarding-title">every proper noun is flagged by confidence.</h2>
+    <p class="onboarding-subtitle">
+      names and terms are marked so you know exactly what to verify — no silent errors in filed documents.
+    </p>
+
+    <div class="onboard-confidence-demo">
+      <div class="onboard-confidence-output" id="confidence-output">
+        <!-- Populated by JS -->
+      </div>
+      <div class="confidence-legend">
+        <div class="confidence-legend-item">
+          <span class="confidence-legend-dot" style="background: var(--confidence-high)"></span>
+          verified
+        </div>
+        <div class="confidence-legend-item">
+          <span class="confidence-legend-dot" style="background: var(--confidence-medium)"></span>
+          review
+        </div>
+        <div class="confidence-legend-item">
+          <span class="confidence-legend-dot" style="background: var(--confidence-low)"></span>
+          uncertain — check
+        </div>
+      </div>
+    </div>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" onclick="Onboarding.prev()">← back</button>
+      <button class="btn btn-primary btn-lg" onclick="Onboarding.next()">
+        <span>continue</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 6: Talk Key ────────────────────────────────────── -->
+  <div class="onboarding-step" id="onboard-talkkey" data-step="6">
+    <div class="onboarding-step-number">step 6 of 7</div>
+    <h2 class="onboarding-title">hold to talk. release to finish.</h2>
+    <p class="onboarding-subtitle">
+      press the talk key anywhere in the app — Kivi transcribes and formats in real time.
+    </p>
+
+    <div class="talk-key-demo">
+      <div class="talk-key-visual">
+        <div class="talk-key-ring"></div>
+        <div class="talk-key-ring"></div>
+        <div class="talk-key-ring"></div>
+        <button class="talk-key-btn" aria-label="Talk key demo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="22"/>
+          </svg>
+        </button>
+      </div>
+      <div class="talk-key-instruction">
+        press <kbd>left ⌃</kbd> anywhere to talk
+      </div>
+    </div>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-ghost" onclick="Onboarding.prev()">← back</button>
+      <button class="btn btn-primary btn-lg" onclick="Onboarding.next()">
+        <span>complete setup</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Step 7: Complete ────────────────────────────────────── -->
+  <div class="onboarding-step" id="onboard-complete" data-step="7">
+    <!-- Verified / stamped seal mark -->
+    <div class="hero-motif">
+      <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="60" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+        <circle cx="80" cy="80" r="52" stroke="currentColor" stroke-width="0.8" opacity="0.15"/>
+        <polyline points="60,82 74,96 102,66" fill="none" stroke="currentColor" stroke-width="3" opacity="0.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <h2 class="onboarding-title">ready to work.</h2>
+    <p class="onboarding-subtitle">
+      your registers, dictionary, and language are configured. start filing documents.
+    </p>
+
+    <div class="onboarding-actions">
+      <button class="btn btn-primary btn-lg" onclick="Onboarding.complete()">
+        <span>go to workspace</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ APP SHELL ═══════════════════ -->
+<div class="app-shell" id="app-shell" style="display:none">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo"><h1>kivi</h1></div>
+
+    <nav class="sidebar-nav">
+      <button class="sidebar-link active" data-screen="record" onclick="App.navigate('record')">
+        <span class="icon">⏺</span> record
+      </button>
+      <button class="sidebar-link" data-screen="history" onclick="App.navigate('history')">
+        <span class="icon">⏱</span> history
+      </button>
+
+      <div class="sidebar-section-label">your workspace</div>
+      <button class="sidebar-link" data-screen="registers" onclick="App.navigate('registers')">
+        <span class="icon">📄</span> registers
+      </button>
+      <button class="sidebar-link" data-screen="dictionary" onclick="App.navigate('dictionary')">
+        <span class="icon">📖</span> dictionary
+      </button>
+      <button class="sidebar-link" data-screen="shortcuts" onclick="App.navigate('shortcuts')">
+        <span class="icon">⌨</span> shortcuts
+      </button>
+      <button class="sidebar-link" data-screen="scratchpad" onclick="App.navigate('scratchpad')">
+        <span class="icon">✏️</span> scratchpad
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-avatar" id="sidebar-avatar">D</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">User</div>
+        <div class="sidebar-user-role" id="sidebar-role"></div>
+      </div>
+      <button class="sidebar-settings-btn" aria-label="Settings">⚙</button>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ─────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ══════ Record Screen ══════ -->
+    <section class="screen active" id="screen-record">
+      <div class="home-greeting">
+        <div class="home-greeting-time" id="home-greeting"></div>
+        <div class="home-stats">
+          <span class="stat-pill">⇡ 100+ wpm</span>
+          <span class="stat-pill" id="home-register-count"></span>
+        </div>
+      </div>
+
+      <div class="label mb-2">active register</div>
+      <div class="register-quick-access" id="register-chips">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="dictation-area" id="main-dictation-area">
+        <textarea
+          class="dictation-textarea"
+          id="main-dictation-input"
+          placeholder="start typing to simulate dictation, or press left ⌃ to talk..."
+          oninput="App.onMainDictation(this.value)"
+        ></textarea>
+        <div class="dictation-hint">
+          press <kbd>left ⌃</kbd> anywhere to talk
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="recent-takes-header">
+        <span class="label">recent takes</span>
+        <button class="btn btn-sm btn-ghost" onclick="App.navigate('history')">all takes →</button>
+      </div>
+
+      <div id="recent-takes-list">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ══════ History Screen ══════ -->
+    <section class="screen" id="screen-history">
+      <div class="screen-header flex justify-between items-center">
+        <div>
+          <h2 class="screen-title">history</h2>
+          <p class="screen-subtitle">every dictation you've filed, searchable and reviewable.</p>
+        </div>
+        <div class="input-with-icon" style="max-width: 260px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="input" type="text" placeholder="search takes..." />
+        </div>
+      </div>
+      <div id="history-content">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ══════ Registers Screen ══════ -->
+    <section class="screen" id="screen-registers">
+      <div class="screen-header flex justify-between items-center">
+        <div>
+          <h2 class="screen-title">registers</h2>
+          <p class="screen-subtitle">standard document formats for recurring institutional work.</p>
+        </div>
+        <button class="btn btn-primary" onclick="App.openCreateRegisterModal()">+ new register</button>
+      </div>
+
+      <div id="registers-list">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Register Detail View (hidden by default) -->
+      <div id="register-detail" style="display:none">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ══════ Dictionary Screen ══════ -->
+    <section class="screen" id="screen-dictionary">
+      <div class="screen-header flex justify-between items-center">
+        <div>
+          <h2 class="screen-title">dictionary</h2>
+        </div>
+        <button class="btn btn-ghost" onclick="App.openImportModal()">⊞ import</button>
+      </div>
+
+      <div class="dictionary-hero">
+        <div class="dictionary-hero-left">
+          <div class="dictionary-hero-tagline">words kivi <u>never</u> misspells.</div>
+          <p class="text-secondary" style="font-size: var(--text-sm); margin-top: var(--space-2);">
+            add the names, places, and terms that appear in your documents. Kivi learns them permanently.
+          </p>
+        </div>
+        <div class="dictionary-hero-right">
+          <div class="dictionary-example">
+            <div>
+              <div class="dictionary-example-label">you say</div>
+              <div class="dictionary-example-value" style="font-style: italic; color: var(--color-text-muted);">"aditya shatriya"</div>
+            </div>
+            <div class="dictionary-arrow">→</div>
+            <div>
+              <div class="dictionary-example-label">kivi writes</div>
+              <div class="dictionary-example-value" style="font-weight: 700;">Aaditya Kshatriya</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add term button -->
+      <button class="btn btn-outline w-full mb-6" onclick="App.openDictionaryModal()" style="justify-content: space-between; padding: var(--space-4) var(--space-5);">
+        <span>⊕ add a term</span>
+        <span>›</span>
+      </button>
+
+      <div id="dictionary-terms-list">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ══════ Shortcuts Screen ══════ -->
+    <section class="screen" id="screen-shortcuts">
+      <div class="screen-header">
+        <h2 class="screen-title">shortcuts</h2>
+        <p class="screen-subtitle">phrases you repeat across documents — say a trigger, kivi expands it.</p>
+      </div>
+
+      <div class="shortcut-hero" id="shortcut-hero">
+        <div class="shortcut-demo">
+          <div class="shortcut-demo-say">
+            <div class="shortcut-demo-say-label">you say</div>
+            <div class="shortcut-demo-say-text">"court header"</div>
+          </div>
+          <div class="shortcut-demo-arrow">→</div>
+          <div class="shortcut-demo-result">
+            माननीय न्यायालय के समक्ष<br/>दिनांक: ___<br/>प्रकरण क्रमांक: ___
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline w-full mb-6" onclick="App.openShortcutModal()" style="justify-content: space-between; padding: var(--space-4) var(--space-5);">
+        <span>⊕ add a shortcut</span>
+        <span>›</span>
+      </button>
+
+      <div id="shortcuts-list">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ══════ Scratchpad Screen ══════ -->
+    <section class="screen" id="screen-scratchpad">
+      <div class="screen-header">
+        <h2 class="screen-title">scratchpad</h2>
+        <p class="screen-subtitle">draft space — compose before filing into a register.</p>
+      </div>
+
+      <div class="scratchpad-editor">
+        <textarea
+          class="scratchpad-textarea"
+          id="scratchpad-input"
+          placeholder="start drafting here. you can send this to a register when ready."
+          oninput="App.onScratchpadInput(this.value)"
+        ></textarea>
+        <div class="scratchpad-toolbar">
+          <span class="text-muted" style="font-size: var(--text-xs); font-family: var(--font-heading);" id="scratchpad-count">0 characters</span>
+          <div class="scratchpad-actions">
+            <button class="btn btn-sm btn-ghost" onclick="App.clearScratchpad()">clear</button>
+            <button class="btn btn-sm btn-primary" onclick="App.sendToRegister()">→ send to register</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <div class="label mb-4">transform</div>
+        <p class="text-secondary mb-4" style="font-size: var(--text-sm);">clean up your draft for filing.</p>
+        <div class="flex gap-3 flex-wrap">
+          <button class="btn btn-ghost btn-sm">formalize for filing</button>
+          <button class="btn btn-ghost btn-sm">simplify language</button>
+          <button class="btn btn-ghost btn-sm">translate to English</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- Create Register Modal -->
+<div class="modal-overlay" id="modal-create-register">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">create a new register</h3>
+      <button class="modal-close" onclick="App.closeModals()">✕</button>
+    </div>
+    <form onsubmit="App.createRegister(event)">
+      <div class="form-group">
+        <label class="form-label">register name</label>
+        <input class="input" type="text" id="new-register-name" placeholder="e.g. Civil Petition, Question Paper" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">language</label>
+        <div class="toggle-group" id="new-register-lang">
+          <button type="button" class="toggle-option active" data-value="marathi" onclick="App.toggleOption(this)">Marathi</button>
+          <button type="button" class="toggle-option" data-value="hindi" onclick="App.toggleOption(this)">Hindi</button>
+          <button type="button" class="toggle-option" data-value="english" onclick="App.toggleOption(this)">English</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">script</label>
+        <div class="toggle-group" id="new-register-script">
+          <button type="button" class="toggle-option active" data-value="native" onclick="App.toggleOption(this)">native script</button>
+          <button type="button" class="toggle-option" data-value="roman" onclick="App.toggleOption(this)">romanized</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">tone</label>
+        <div class="tone-selector" id="new-register-tone">
+          <button type="button" class="tone-option active" data-value="formal" onclick="App.toggleTone(this)">formal</button>
+          <button type="button" class="tone-option" data-value="conversational" onclick="App.toggleTone(this)">conversational</button>
+          <button type="button" class="tone-option" data-value="technical" onclick="App.toggleTone(this)">technical</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">template fields</label>
+        <div class="form-hint">comma-separated field names, e.g. "Case Number, Date, Petitioner, Respondent"</div>
+        <textarea class="input mt-2" id="new-register-fields" placeholder="Case Number, Date, Petitioner Name, Respondent Name, Subject, Body" rows="3"></textarea>
+      </div>
+      <div class="flex gap-3 justify-between mt-8">
+        <button type="button" class="btn btn-ghost" onclick="App.closeModals()">cancel</button>
+        <button type="submit" class="btn btn-primary">create register</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Dictionary Modal -->
+<div class="modal-overlay" id="modal-dictionary">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">add a term</h3>
+      <button class="modal-close" onclick="App.closeModals()">✕</button>
+    </div>
+    <form onsubmit="App.addDictionaryTerm(event)">
+      <div class="form-group">
+        <label class="form-label">term (as written)</label>
+        <input class="input" type="text" id="dict-term-written" placeholder="e.g. गडचिरोली" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">pronunciation (how you say it)</label>
+        <input class="input" type="text" id="dict-term-spoken" placeholder="e.g. Gadchiroli" />
+        <div class="form-hint">optional — helps Kivi recognize the word from speech</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">meaning / context</label>
+        <input class="input" type="text" id="dict-term-meaning" placeholder="e.g. District name" />
+      </div>
+      <div class="flex gap-3 justify-between mt-8">
+        <button type="button" class="btn btn-ghost" onclick="App.closeModals()">cancel</button>
+        <button type="submit" class="btn btn-primary">add term</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Shortcut Modal -->
+<div class="modal-overlay" id="modal-shortcut">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">add a shortcut</h3>
+      <button class="modal-close" onclick="App.closeModals()">✕</button>
+    </div>
+    <form onsubmit="App.addShortcut(event)">
+      <div class="form-group">
+        <label class="form-label">trigger phrase (what you say)</label>
+        <input class="input" type="text" id="shortcut-trigger" placeholder='e.g. "court header"' required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">expansion (what kivi writes)</label>
+        <textarea class="input" id="shortcut-expansion" placeholder="e.g. माननीय न्यायालय के समक्ष&#10;दिनांक: ___&#10;प्रकरण क्रमांक: ___" rows="4" required></textarea>
+      </div>
+      <div class="flex gap-3 justify-between mt-8">
+        <button type="button" class="btn btn-ghost" onclick="App.closeModals()">cancel</button>
+        <button type="submit" class="btn btn-primary">add shortcut</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Send to Register Modal -->
+<div class="modal-overlay" id="modal-send-register">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">send to register</h3>
+      <button class="modal-close" onclick="App.closeModals()">✕</button>
+    </div>
+    <p class="text-secondary mb-6" style="font-size: var(--text-sm);">select which register to file this draft into.</p>
+    <div id="send-register-list">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
