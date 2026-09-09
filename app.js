@@ -1138,12 +1138,30 @@ const Onboarding = {
   totalSteps: 8,
 
   init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('reset') || urlParams.has('onboard') || urlParams.has('onboarding')) {
+      localStorage.removeItem('kivi-state');
+      State.onboardingDone = false;
+      document.getElementById('onboarding').classList.remove('hidden');
+      document.getElementById('app-shell').style.display = 'none';
+      this.showStep(0);
+      return;
+    }
     if (State.load() && State.onboardingDone) {
       document.getElementById('onboarding').classList.add('hidden');
       document.getElementById('app-shell').style.display = 'flex';
       App.init();
       return;
     }
+    this.showStep(0);
+  },
+
+  restart() {
+    localStorage.removeItem('kivi-state');
+    State.onboardingDone = false;
+    App.closeModals();
+    document.getElementById('app-shell').style.display = 'none';
+    document.getElementById('onboarding').classList.remove('hidden');
     this.showStep(0);
   },
 
