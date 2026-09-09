@@ -108,12 +108,12 @@
     <!-- Primary personas — Court and Teacher -->
     <div class="profession-primary stagger" id="profession-picker">
       <button class="profession-card profession-card-primary" data-profession="court" onclick="Onboarding.selectProfession(this)">
-        <div class="profession-card-icon">⚖️</div>
+        <div class="profession-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7l7-4 7 4"/><path d="M2 11l3-4 3 4"/><path d="M16 11l3-4 3 4"/><path d="M2 11h6"/><path d="M16 11h6"/><path d="M8 21H16"/></svg></div>
         <div class="profession-card-title">District Court Staff</div>
         <div class="profession-card-desc">petitions, orders, affidavits, case summaries — all in Devanagari</div>
       </button>
       <button class="profession-card profession-card-primary" data-profession="teacher" onclick="Onboarding.selectProfession(this)">
-        <div class="profession-card-icon">📚</div>
+        <div class="profession-card-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8"/><path d="M8 11h6"/></svg></div>
         <div class="profession-card-title">Language Teacher</div>
         <div class="profession-card-desc">question papers, lesson plans, evaluations — typed in the script you teach</div>
       </button>
@@ -121,8 +121,8 @@
     <!-- Secondary fallback -->
     <div class="profession-secondary-label">also works for</div>
     <div class="profession-secondary">
-      <button class="profession-chip" data-profession="government" onclick="Onboarding.selectProfession(this)">🏛️ government office</button>
-      <button class="profession-chip" data-profession="other" onclick="Onboarding.selectProfession(this)">💼 other workplace</button>
+      <button class="profession-chip" data-profession="government" onclick="Onboarding.selectProfession(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-4h6v4"/><path d="M9 10h1"/><path d="M14 10h1"/><path d="M9 14h1"/><path d="M14 14h1"/></svg> government office</button>
+      <button class="profession-chip" data-profession="other" onclick="Onboarding.selectProfession(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M12 12v1"/></svg> other workplace</button>
     </div>
 
     <div class="onboarding-actions">
@@ -158,18 +158,46 @@
     <div class="onboarding-step-number">step 4 of 7</div>
     <h2 class="onboarding-title">try your first dictation.</h2>
     <p class="onboarding-subtitle">
-      type below to simulate — in production, you speak. content flows into your register template.
+      speak into your microphone or type below. Powered by Sarvam AI Saaras, your speech transcribes directly into your register template.
     </p>
 
     <div class="onboard-dictation-demo">
       <div class="onboard-dictation-prompt" id="dictation-prompt"></div>
-      <div class="dictation-area">
+      <div class="dictation-area" id="onboard-dictation-area">
+        <div class="dictation-header-bar">
+          <div class="dictation-status-pill">
+            <span class="live-dot" id="onboard-live-dot"></span>
+            <span>Sarvam AI Saaras:v4</span>
+          </div>
+          <div class="dictation-actions-right">
+            <span class="badge" id="onboard-lang-badge" style="font-size:0.75rem; font-weight:600;">mr-IN (मराठी)</span>
+          </div>
+        </div>
+
         <textarea
           class="dictation-textarea"
           id="onboard-dictation-input"
-          placeholder="start typing to simulate dictation..."
+          placeholder="click dictate below or speak into your mic to test Sarvam AI..."
           oninput="Onboarding.onDictation(this.value)"
         ></textarea>
+
+        <div class="dictation-controls-bar">
+          <div class="mic-action-group">
+            <button class="mic-btn" id="onboard-mic-btn" onclick="Dictation.toggleRecording('onboard')" title="Speak now">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              <span id="onboard-mic-label">Dictate</span>
+              <div class="audio-waves" id="onboard-mic-waves" style="display:none">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="Dictation.simulateSample('onboard')" title="Simulate real Indic dictation">
+              ⚡ sample speech
+            </button>
+          </div>
+          <div class="dictation-hint" id="onboard-dictation-hint">
+            press <kbd>Left Ctrl</kbd> or click mic to talk
+          </div>
+        </div>
       </div>
       <div class="template-preview mt-6" id="onboard-template-preview">
         <!-- Populated by JS -->
@@ -225,15 +253,15 @@
     <div class="onboarding-step-number">step 6 of 7</div>
     <h2 class="onboarding-title">hold to talk. release to finish.</h2>
     <p class="onboarding-subtitle">
-      press the talk key anywhere in the app — Kivi transcribes and formats in real time.
+      press the talk key anywhere in the app — Sarvam AI transcribes and formats in real time.
     </p>
 
     <div class="talk-key-demo">
-      <div class="talk-key-visual">
+      <div class="talk-key-visual" id="talk-key-visual">
         <div class="talk-key-ring"></div>
         <div class="talk-key-ring"></div>
         <div class="talk-key-ring"></div>
-        <button class="talk-key-btn" aria-label="Talk key demo">
+        <button class="talk-key-btn" id="onboard-talkkey-btn" onclick="Dictation.toggleRecording('talkkey_demo')" aria-label="Talk key demo" title="Click or hold Left Ctrl to talk">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
             <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -241,8 +269,15 @@
           </svg>
         </button>
       </div>
-      <div class="talk-key-instruction">
-        press <kbd>left ⌃</kbd> anywhere to talk
+      <div class="talk-key-instruction" id="talk-key-instruction">
+        press <kbd>Left Ctrl</kbd> or click the mic to talk
+      </div>
+      <div class="talk-key-transcript" id="talkkey-transcript-preview" style="display:none; margin-top:20px; font-family:var(--font-body); font-size:var(--text-base); padding:14px 20px; background:var(--color-bg-card); border:1px solid var(--color-border); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); max-width:540px; margin-left:auto; margin-right:auto; text-align:left;">
+      </div>
+      <div class="mt-4 flex justify-center">
+        <button class="btn btn-ghost btn-sm" onclick="Dictation.simulateSample('talkkey_demo')">
+          ⚡ test sample speech
+        </button>
       </div>
     </div>
 
@@ -287,34 +322,53 @@
 
     <nav class="sidebar-nav">
       <button class="sidebar-link active" data-screen="record" onclick="App.navigate('record')">
-        <span class="icon">⏺</span> record
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></span> <span data-i18n="navRecord">record</span>
       </button>
       <button class="sidebar-link" data-screen="history" onclick="App.navigate('history')">
-        <span class="icon">⏱</span> history
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span> <span data-i18n="navHistory">history</span>
       </button>
 
-      <div class="sidebar-section-label">your workspace</div>
+      <div class="sidebar-section-label" data-i18n="navWorkspace">your workspace</div>
       <button class="sidebar-link" data-screen="registers" onclick="App.navigate('registers')">
-        <span class="icon">📄</span> registers
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span> <span data-i18n="navRegisters">registers</span>
       </button>
       <button class="sidebar-link" data-screen="dictionary" onclick="App.navigate('dictionary')">
-        <span class="icon">📖</span> dictionary
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> <span data-i18n="navDictionary">dictionary</span>
       </button>
       <button class="sidebar-link" data-screen="shortcuts" onclick="App.navigate('shortcuts')">
-        <span class="icon">⌨</span> shortcuts
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></span> <span data-i18n="navShortcuts">shortcuts</span>
       </button>
       <button class="sidebar-link" data-screen="scratchpad" onclick="App.navigate('scratchpad')">
-        <span class="icon">✏️</span> scratchpad
+        <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> <span data-i18n="navScratchpad">scratchpad</span>
       </button>
     </nav>
 
-    <div class="sidebar-bottom">
-      <div class="sidebar-avatar" id="sidebar-avatar">D</div>
-      <div class="sidebar-user-info">
-        <div class="sidebar-user-name">User</div>
-        <div class="sidebar-user-role" id="sidebar-role"></div>
+    <div class="sidebar-footer-wrap">
+      <!-- Fast Toggles: Language Pill & Theme Switch & Settings -->
+      <div class="sidebar-controls">
+        <button class="lang-toggle-btn" id="lang-toggle-btn" onclick="I18n.toggle()" title="Toggle UI Language between English & Selected Indic Language">
+          <span class="lang-opt active" id="lang-opt-en">EN</span>
+          <span style="opacity:0.35">/</span>
+          <span class="lang-opt" id="lang-opt-native">मराठी</span>
+        </button>
+
+        <div class="flex items-center gap-1">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="Theme.toggle()" title="Toggle Light / Dark Mode">
+            <svg id="theme-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="sidebar-ctrl-btn" onclick="App.openSettings()" title="Settings & Sarvam AI API Key">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
       </div>
-      <button class="sidebar-settings-btn" aria-label="Settings">⚙</button>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-avatar" id="sidebar-avatar">D</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">User</div>
+          <div class="sidebar-user-role" id="sidebar-role">District Court Staff</div>
+        </div>
+      </div>
     </div>
   </aside>
 
@@ -324,35 +378,63 @@
     <!-- ══════ Record Screen ══════ -->
     <section class="screen active" id="screen-record">
       <div class="home-greeting">
-        <div class="home-greeting-time" id="home-greeting"></div>
+        <div class="home-greeting-time" id="home-greeting">good morning.</div>
         <div class="home-stats">
-          <span class="stat-pill">⇡ 100+ wpm</span>
-          <span class="stat-pill" id="home-register-count"></span>
+          <span class="stat-pill" data-i18n="wpmStat">⇡ 100+ wpm</span>
+          <span class="stat-pill" id="home-register-count">2 registers active</span>
         </div>
       </div>
 
-      <div class="label mb-2">active register</div>
+      <div class="label mb-2" data-i18n="activeRegisterLabel">active register</div>
       <div class="register-quick-access" id="register-chips">
         <!-- Populated by JS -->
       </div>
 
       <div class="dictation-area" id="main-dictation-area">
+        <div class="dictation-header-bar">
+          <div class="dictation-status-pill" id="dictation-engine-pill">
+            <span class="live-dot" id="dictation-live-dot"></span>
+            <span id="dictation-engine-label">Sarvam AI Saaras:v4</span>
+          </div>
+          <div class="dictation-actions-right">
+            <span class="badge" id="dictation-lang-badge" style="font-size:0.75rem; font-weight:600; cursor:pointer;" onclick="App.openSettings()" title="Click to change language">mr-IN (मराठी)</span>
+            <button class="btn btn-ghost btn-sm" onclick="App.clearMainDictation()" title="Clear text" style="padding:2px 8px; font-size:0.75rem;" data-i18n="clearBtn">clear</button>
+            <button class="btn btn-ghost btn-sm" onclick="App.copyMainDictation()" title="Copy to clipboard" style="padding:2px 8px; font-size:0.75rem;" data-i18n="copyBtn">copy</button>
+          </div>
+        </div>
+
         <textarea
           class="dictation-textarea"
           id="main-dictation-input"
           placeholder="start typing to simulate dictation, or press left ⌃ to talk..."
+          data-i18n-placeholder="dictationPlaceholder"
           oninput="App.onMainDictation(this.value)"
         ></textarea>
-        <div class="dictation-hint">
-          press <kbd>left ⌃</kbd> anywhere to talk
+
+        <div class="dictation-controls-bar">
+          <div class="mic-action-group">
+            <button class="mic-btn" id="main-mic-btn" onclick="Dictation.toggleRecording('main')" title="Click or hold to dictate">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              <span id="main-mic-label" data-i18n="dictateBtn">Dictate</span>
+              <div class="audio-waves" id="main-mic-waves" style="display:none">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="Dictation.simulateSample('main')" title="Simulate real Indic dictation sample" data-i18n="sampleAudioBtn">
+              ⚡ sample audio
+            </button>
+          </div>
+          <div class="dictation-hint" id="main-dictation-hint">
+            <span data-i18n="pressKeyHint">press</span> <kbd>Left Ctrl</kbd> <span data-i18n="orHoldMicHint">or click mic to talk</span>
+          </div>
         </div>
       </div>
 
       <div class="section-divider"></div>
 
       <div class="recent-takes-header">
-        <span class="label">recent takes</span>
-        <button class="btn btn-sm btn-ghost" onclick="App.navigate('history')">all takes →</button>
+        <span class="label" data-i18n="recentTakesLabel">recent takes</span>
+        <button class="btn btn-sm btn-ghost" onclick="App.navigate('history')" data-i18n="allTakesBtn">all takes →</button>
       </div>
 
       <div id="recent-takes-list">
@@ -364,12 +446,12 @@
     <section class="screen" id="screen-history">
       <div class="screen-header flex justify-between items-center">
         <div>
-          <h2 class="screen-title">history</h2>
-          <p class="screen-subtitle">every dictation you've filed, searchable and reviewable.</p>
+          <h2 class="screen-title" data-i18n="historyTitle">history</h2>
+          <p class="screen-subtitle" data-i18n="historySubtitle">every dictation you've filed, searchable and reviewable.</p>
         </div>
         <div class="input-with-icon" style="max-width: 260px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input class="input" type="text" placeholder="search takes..." />
+          <input class="input" type="text" placeholder="search takes..." data-i18n-placeholder="searchPlaceholder" />
         </div>
       </div>
       <div id="history-content">
@@ -381,10 +463,10 @@
     <section class="screen" id="screen-registers">
       <div class="screen-header flex justify-between items-center">
         <div>
-          <h2 class="screen-title">registers</h2>
-          <p class="screen-subtitle">standard document formats for recurring institutional work.</p>
+          <h2 class="screen-title" data-i18n="registersTitle">registers</h2>
+          <p class="screen-subtitle" data-i18n="registersSubtitle">standard document formats for recurring institutional work.</p>
         </div>
-        <button class="btn btn-primary" onclick="App.openCreateRegisterModal()">+ new register</button>
+        <button class="btn btn-primary" onclick="App.openCreateRegisterModal()" data-i18n="newRegisterBtn">+ new register</button>
       </div>
 
       <div id="registers-list">
@@ -401,27 +483,27 @@
     <section class="screen" id="screen-dictionary">
       <div class="screen-header flex justify-between items-center">
         <div>
-          <h2 class="screen-title">dictionary</h2>
+          <h2 class="screen-title" data-i18n="dictionaryTitle">dictionary</h2>
         </div>
-        <button class="btn btn-ghost" onclick="App.openImportModal()">⊞ import</button>
+        <button class="btn btn-ghost" onclick="App.openImportModal()" data-i18n="importBtn">⊞ import</button>
       </div>
 
       <div class="dictionary-hero">
         <div class="dictionary-hero-left">
-          <div class="dictionary-hero-tagline">words kivi <u>never</u> misspells.</div>
-          <p class="text-secondary" style="font-size: var(--text-sm); margin-top: var(--space-2);">
+          <div class="dictionary-hero-tagline" data-i18n="dictHeroTagline">words kivi <u>never</u> misspells.</div>
+          <p class="text-secondary" style="font-size: var(--text-sm); margin-top: var(--space-2);" data-i18n="dictHeroDesc">
             add the names, places, and terms that appear in your documents. Kivi learns them permanently.
           </p>
         </div>
         <div class="dictionary-hero-right">
           <div class="dictionary-example">
             <div>
-              <div class="dictionary-example-label">you say</div>
+              <div class="dictionary-example-label" data-i18n="youSayLabel">you say</div>
               <div class="dictionary-example-value" style="font-style: italic; color: var(--color-text-muted);">"aditya shatriya"</div>
             </div>
             <div class="dictionary-arrow">→</div>
             <div>
-              <div class="dictionary-example-label">kivi writes</div>
+              <div class="dictionary-example-label" data-i18n="kiviWritesLabel">kivi writes</div>
               <div class="dictionary-example-value" style="font-weight: 700;">Aaditya Kshatriya</div>
             </div>
           </div>
@@ -430,7 +512,7 @@
 
       <!-- Add term button -->
       <button class="btn btn-outline w-full mb-6" onclick="App.openDictionaryModal()" style="justify-content: space-between; padding: var(--space-4) var(--space-5);">
-        <span>⊕ add a term</span>
+        <span data-i18n="addTermBtn">⊕ add a term</span>
         <span>›</span>
       </button>
 
@@ -442,14 +524,14 @@
     <!-- ══════ Shortcuts Screen ══════ -->
     <section class="screen" id="screen-shortcuts">
       <div class="screen-header">
-        <h2 class="screen-title">shortcuts</h2>
-        <p class="screen-subtitle">phrases you repeat across documents — say a trigger, kivi expands it.</p>
+        <h2 class="screen-title" data-i18n="shortcutsTitle">shortcuts</h2>
+        <p class="screen-subtitle" data-i18n="shortcutsSubtitle">phrases you repeat across documents — say a trigger, kivi expands it.</p>
       </div>
 
       <div class="shortcut-hero" id="shortcut-hero">
         <div class="shortcut-demo">
           <div class="shortcut-demo-say">
-            <div class="shortcut-demo-say-label">you say</div>
+            <div class="shortcut-demo-say-label" data-i18n="youSayLabel">you say</div>
             <div class="shortcut-demo-say-text">"court header"</div>
           </div>
           <div class="shortcut-demo-arrow">→</div>
@@ -460,7 +542,7 @@
       </div>
 
       <button class="btn btn-outline w-full mb-6" onclick="App.openShortcutModal()" style="justify-content: space-between; padding: var(--space-4) var(--space-5);">
-        <span>⊕ add a shortcut</span>
+        <span data-i18n="addShortcutBtn">⊕ add a shortcut</span>
         <span>›</span>
       </button>
 
@@ -472,8 +554,8 @@
     <!-- ══════ Scratchpad Screen ══════ -->
     <section class="screen" id="screen-scratchpad">
       <div class="screen-header">
-        <h2 class="screen-title">scratchpad</h2>
-        <p class="screen-subtitle">draft space — compose before filing into a register.</p>
+        <h2 class="screen-title" data-i18n="scratchpadTitle">scratchpad</h2>
+        <p class="screen-subtitle" data-i18n="scratchpadSubtitle">draft space — compose before filing into a register.</p>
       </div>
 
       <div class="scratchpad-editor">
@@ -481,24 +563,29 @@
           class="scratchpad-textarea"
           id="scratchpad-input"
           placeholder="start drafting here. you can send this to a register when ready."
+          data-i18n-placeholder="scratchpadPlaceholder"
           oninput="App.onScratchpadInput(this.value)"
         ></textarea>
         <div class="scratchpad-toolbar">
           <span class="text-muted" style="font-size: var(--text-xs); font-family: var(--font-heading);" id="scratchpad-count">0 characters</span>
           <div class="scratchpad-actions">
-            <button class="btn btn-sm btn-ghost" onclick="App.clearScratchpad()">clear</button>
-            <button class="btn btn-sm btn-primary" onclick="App.sendToRegister()">→ send to register</button>
+            <button class="btn btn-sm btn-ghost" id="scratchpad-mic-btn" onclick="Dictation.toggleRecording('scratchpad')" title="Dictate into scratchpad">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              <span data-i18n="dictateBtn">dictate</span>
+            </button>
+            <button class="btn btn-sm btn-ghost" onclick="App.clearScratchpad()" data-i18n="clearBtn">clear</button>
+            <button class="btn btn-sm btn-primary" onclick="App.sendToRegister()" data-i18n="sendToRegisterBtn">→ send to register</button>
           </div>
         </div>
       </div>
 
       <div class="mt-6">
-        <div class="label mb-4">transform</div>
-        <p class="text-secondary mb-4" style="font-size: var(--text-sm);">clean up your draft for filing.</p>
+        <div class="label mb-4" data-i18n="transformLabel">transform</div>
+        <p class="text-secondary mb-4" style="font-size: var(--text-sm);" data-i18n="transformSubtitle">clean up your draft for filing.</p>
         <div class="flex gap-3 flex-wrap">
-          <button class="btn btn-ghost btn-sm">formalize for filing</button>
-          <button class="btn btn-ghost btn-sm">simplify language</button>
-          <button class="btn btn-ghost btn-sm">translate to English</button>
+          <button class="btn btn-ghost btn-sm" onclick="App.transformDraft('formalize')" data-i18n="formalizeBtn">formalize for filing</button>
+          <button class="btn btn-ghost btn-sm" onclick="App.transformDraft('simplify')" data-i18n="simplifyBtn">simplify language</button>
+          <button class="btn btn-ghost btn-sm" onclick="App.transformDraft('translate')" data-i18n="translateBtn">translate to English</button>
         </div>
       </div>
     </section>
@@ -612,15 +699,92 @@
 <div class="modal-overlay" id="modal-send-register">
   <div class="modal">
     <div class="modal-header">
-      <h3 class="modal-title">send to register</h3>
+      <h3 class="modal-title" data-i18n="sendToRegisterModalTitle">send to register</h3>
       <button class="modal-close" onclick="App.closeModals()">✕</button>
     </div>
-    <p class="text-secondary mb-6" style="font-size: var(--text-sm);">select which register to file this draft into.</p>
+    <p class="text-secondary mb-6" style="font-size: var(--text-sm);" data-i18n="selectRegisterPrompt">select which register to file this draft into.</p>
     <div id="send-register-list">
       <!-- Populated by JS -->
     </div>
   </div>
 </div>
+
+<!-- Settings & Sarvam AI Modal -->
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal" style="max-width: 540px;">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="settingsTitle">settings & sarvam ai</h3>
+      <button class="modal-close" onclick="App.closeModals()">✕</button>
+    </div>
+    <form onsubmit="Settings.saveForm(event)">
+      <!-- Sarvam AI API Key -->
+      <div class="form-group">
+        <div class="flex justify-between items-center mb-1">
+          <label class="form-label" data-i18n="apiKeyLabel">Sarvam AI API Key</label>
+          <span class="api-status-badge connected" id="api-key-status">active</span>
+        </div>
+        <div style="position: relative;">
+          <input class="input" type="password" id="setting-api-key" placeholder="sk_..." style="font-family: monospace; font-size: var(--text-sm); padding-right: 70px;" />
+          <button type="button" class="btn btn-ghost btn-sm" onclick="Settings.toggleKeyVisibility()" style="position: absolute; right: 4px; top: 6px; font-size: 0.72rem;">show</button>
+        </div>
+        <div class="flex justify-between items-center mt-2">
+          <span class="text-secondary" style="font-size: var(--text-xs);" data-i18n="apiKeyHint">Official Sarvam AI Saaras Indic STT API</span>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="Dictation.testConnection()" id="test-connection-btn" style="font-size: 0.75rem; padding: 2px 8px;" data-i18n="testConnectionBtn">test connection</button>
+        </div>
+      </div>
+
+      <!-- Speech Model Selection -->
+      <div class="form-group">
+        <label class="form-label" data-i18n="modelLabel">Speech-to-Text Model</label>
+        <select class="input" id="setting-model" style="background: var(--color-bg-card); cursor: pointer;">
+          <option value="saaras:v4">Sarvam Saaras v4 (Latest & Most Accurate)</option>
+          <option value="saaras:v2">Sarvam Saaras v2</option>
+        </select>
+      </div>
+
+      <!-- Language Selection -->
+      <div class="form-group">
+        <label class="form-label" data-i18n="dictationLangLabel">Dictation Language</label>
+        <select class="input" id="setting-lang" onchange="Settings.onLanguageChange(this.value)" style="background: var(--color-bg-card); cursor: pointer;">
+          <option value="mr-IN">मराठी (Marathi) — mr-IN</option>
+          <option value="hi-IN">हिन्दी (Hindi) — hi-IN</option>
+          <option value="gu-IN">ગુજરાતી (Gujarati) — gu-IN</option>
+          <option value="ta-IN">தமிழ் (Tamil) — ta-IN</option>
+          <option value="te-IN">తెలుగు (Telugu) — te-IN</option>
+          <option value="kn-IN">ಕನ್ನಡ (Kannada) — kn-IN</option>
+          <option value="bn-IN">বাংলা (Bengali) — bn-IN</option>
+          <option value="ml-IN">മലയാളം (Malayalam) — ml-IN</option>
+          <option value="en-IN">English (India) — en-IN</option>
+        </select>
+      </div>
+
+      <!-- UI Language switch in settings -->
+      <div class="flex justify-between items-center p-3 mt-4" style="background: var(--color-bg-alt); border-radius: var(--radius-md); border: 1px solid var(--color-border-light);">
+        <div>
+          <div style="font-weight: 600; font-size: var(--text-sm);" data-i18n="uiLangLabel">UI Language</div>
+          <div class="text-secondary" style="font-size: var(--text-xs);" data-i18n="uiLangSub">Toggle app interface language</div>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" onclick="I18n.toggle(); Settings.syncUI();" id="settings-ui-lang-btn">Switch to मराठी</button>
+      </div>
+
+      <!-- Theme switch in settings -->
+      <div class="flex justify-between items-center p-3 mt-2" style="background: var(--color-bg-alt); border-radius: var(--radius-md); border: 1px solid var(--color-border-light);">
+        <div>
+          <div style="font-weight: 600; font-size: var(--text-sm);" data-i18n="themeLabel">Dark Mode</div>
+          <div class="text-secondary" style="font-size: var(--text-xs);" data-i18n="themeSub">Sleek obsidian theme</div>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" onclick="Theme.toggle(); Settings.syncUI();" id="settings-theme-btn">Toggle Theme</button>
+      </div>
+
+      <div class="flex gap-3 justify-between mt-8">
+        <button type="button" class="btn btn-ghost" onclick="App.closeModals()" data-i18n="cancel">cancel</button>
+        <button type="submit" class="btn btn-primary" data-i18n="saveSettings">save settings</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="kivi-toast-container" id="toast-container"></div>
 
 <script src="app.js"></script>
 </body>
